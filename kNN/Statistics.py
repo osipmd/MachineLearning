@@ -3,7 +3,7 @@ class Statistics:
     def count_tp(result, test_data):
         count = 0
         for i in range(len(result)):
-            if result[i] == 1 and test_data[i].class_number == 1:
+            if result[i].class_number == 1 and test_data[i].class_number == 1:
                 count += 1
         return count
 
@@ -11,7 +11,7 @@ class Statistics:
     def count_fn(result, test_data):
         count = 0
         for i in range(len(result)):
-            if result[i] == 0 and test_data[i].class_number == 1:
+            if result[i].class_number == 0 and test_data[i].class_number == 1:
                 count += 1
         return count
 
@@ -19,7 +19,7 @@ class Statistics:
     def count_fp(result, test_data):
         count = 0
         for i in range(len(result)):
-            if result[i] == 1 and test_data[i].class_number == 0:
+            if result[i].class_number == 1 and test_data[i].class_number == 0:
                 count += 1
         return count
 
@@ -27,7 +27,7 @@ class Statistics:
     def count_tn(result, test_data):
         count = 0
         for i in range(len(result)):
-            if result[i] == 0 and test_data[i].class_number == 0:
+            if result[i].class_number == 0 and test_data[i].class_number == 0:
                 count += 1
         return count
 

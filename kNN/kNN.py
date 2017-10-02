@@ -1,5 +1,7 @@
 from Point import *
 from Statistics import *
+from Drawer import *
+import numpy as np
 
 
 class k_Nearest_Neighbor:
@@ -15,6 +17,12 @@ class k_Nearest_Neighbor:
         for i in range(self.number_cross_validation):
             train_data, test_data = self.split_data_set(i)
             result = self.kNN_classifier(train_data, test_data)
+            data = []
+            for point in train_data:
+                data.append(point)
+            for point in result:
+                data.append(point)
+            Drawer.draw_data(data, True, i)
             print("F_measure: ", Statistics.count_f_measure(result, test_data))
 
     def kNN_classifier(self, train_data, test_data):
@@ -29,7 +37,8 @@ class k_Nearest_Neighbor:
                 class_of_neighbour = neighbour[1] 
                 similarity[class_of_neighbour] += self.kernel(neighbour[0] / sorted_neighbours[self.number_k_Neighbor + 1][0])
             similarity_number_of_class = zip(similarity, range(self.number_of_classes))
-            test_result.append(sorted(similarity_number_of_class, reverse=True)[0][1])
+            test_result_point = Point(test_point.x, test_point.y, sorted(similarity_number_of_class, reverse=True)[0][1])
+            test_result.append(test_result_point)
         return test_result
 
     # split data using parameters

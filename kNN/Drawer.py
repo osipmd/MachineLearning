@@ -13,7 +13,7 @@ class Drawer:
                        cmap=classColormap)
         figure = pyplot.gcf()
         if (result == True):
-            title = 'Result data #' + number.__str__()
+            title = 'Result data #' + str(number)
             figure.canvas.set_window_title(title)
         else:
             figure.canvas.set_window_title('Source data')

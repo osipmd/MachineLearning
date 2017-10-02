@@ -1,4 +1,4 @@
-from Point import Point
+from Point import *
 
 
 class k_Nearest_Neighbor:
@@ -12,9 +12,7 @@ class k_Nearest_Neighbor:
         data = []
         with open(dataset_file) as input_file:
             for line in input_file:
-                x = line.split(",")[0]
-                y = line.split(",")[1]
-                class_number = line.split(",")[2]
+                x, y, class_number = line.split(",")
                 point = Point(float(x), float(y), int(class_number))
                 data.append(point)
         return data

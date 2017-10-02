@@ -1,5 +1,14 @@
 from kNN import *
 
+def read_data_from_file(filename):
+    data = []
+    with open(filename) as input_file:
+        for line in input_file:
+            point = Point.from_str(line)
+            data.append(point)
+    return data
+
+
 # We can use different distance. Default - Euclidean distance
 minkowski_distance = lambda a, b, p: (abs((b.x - a.x) ** p) + abs((b.y - a.y) ** p)) ** (1 / p)
 
@@ -9,17 +18,16 @@ distances = {
     # 'third' : lambda a, b: minkowski_distance(a, b, 3)
 }
 
-
 # https://en.wikipedia.org/wiki/Kernel_(statistics)
-epanechnikov_kernel = lambda val : 0.75 * (1 - val * val)
-
+epanechnikov_kernel = lambda val: 0.75 * (1 - val * val)
 
 number_of_classes = 2
 number_cross_validation = 5
 number_k_Neighbor = 10
-
+data = read_data_from_file('chips.txt')
 for name, dist in distances.items():
     print(name)
-    kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist, epanechnikov_kernel)
+    kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist, epanechnikov_kernel,
+                             data)
     kNN.calculate_classification()
-    print()
+    print()  # read data from file

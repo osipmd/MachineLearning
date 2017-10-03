@@ -29,7 +29,7 @@ number_of_classes = 2
 number_cross_validation = 5
 number_k_Neighbor = 10
 data = read_data_from_file('chips.txt')
-Drawer.draw_data(data)
+# Drawer.draw_data(data)
 for name, dist in distances.items():
     print(name)
     kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist, epanechnikov_kernel,

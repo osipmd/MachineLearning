@@ -3,6 +3,7 @@ from Drawer import *
 
 from kNN import *
 
+
 def read_data_from_file(filename):
     data = []
     with open(filename) as input_file:
@@ -23,7 +24,7 @@ distances = {
 
 # https://en.wikipedia.org/wiki/Kernel_(statistics)
 epanechnikov_kernel = lambda val: 0.75 * (1 - val * val)
-gaussian_kernel = lambda val: 1/math.sqrt(2*math.pi)*math.exp((-1/2)*val*val)
+gaussian_kernel = lambda val: 1 / math.sqrt(2 * math.pi) * math.exp((-1 / 2) * val * val)
 
 number_of_classes = 2
 number_cross_validation = 5
@@ -34,5 +35,13 @@ for name, dist in distances.items():
     print(name)
     kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist, epanechnikov_kernel,
                              data)
-    kNN.calculate_classification()
+    results = kNN.calculate_classification()
+
+    for result in results:
+        train_data = result[0]
+        test_data = result[1]
+        for point in test_data:
+            train_data.append(point)
+        Drawer.draw_data(train_data, True, 1)
+        print("F_measure: ", Statistics.count_f_measure(result[2], test_data))
     print()  # read data from file

@@ -14,16 +14,12 @@ class k_Nearest_Neighbor:
         self.dist = dist
 
     def calculate_classification(self):
+        results = []
         for i in range(self.number_cross_validation):
             train_data, test_data = self.split_data_set(i)
             result = self.kNN_classifier(train_data, test_data)
-            data = []
-            for point in train_data:
-                data.append(point)
-            for point in result:
-                data.append(point)
-            # Drawer.draw_data(data, True, i)
-            print("F_measure: ", Statistics.count_f_measure(result, test_data))
+            results.append([train_data, result, test_data])
+        return results
 
     def kNN_classifier(self, train_data, test_data):
         test_result = []

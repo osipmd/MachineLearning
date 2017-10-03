@@ -1,5 +1,6 @@
 import math
-from Drawer import *
+#from Drawer import *
+import random
 
 from kNN import *
 
@@ -26,13 +27,18 @@ epanechnikov_kernel = lambda val: 0.75 * (1 - val * val)
 gaussian_kernel = lambda val: 1/math.sqrt(2*math.pi)*math.exp((-1/2)*val*val)
 
 number_of_classes = 2
-number_cross_validation = 5
 number_k_Neighbor = 10
+number_cross_validation = 5
 data = read_data_from_file('chips.txt')
-Drawer.draw_data(data)
+random.shuffle(data)
+
+#Drawer.draw_data(data)
 for name, dist in distances.items():
     print(name)
+    result = []
+    #for number_k_Neighbor in range(2,21):
     kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist, epanechnikov_kernel,
                              data)
-    kNN.calculate_classification()
+    result.append(kNN.calculate_classification())
+    #Drawer.draw_graphic(result)
     print()  # read data from file

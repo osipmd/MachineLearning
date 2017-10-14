@@ -28,7 +28,7 @@ class Drawer:
         for i in range(len(data)):
             x.append(i + 2)
         pyplot.bar(x, data)
-        pyplot.show()
+        pyplot.savefig("out_data/k_results.png")
 
     @staticmethod
     def showDataOnMesh(source_data, result):
@@ -61,4 +61,5 @@ class Drawer:
                        [source_data[i].y for i in range(len(source_data))],
                        c=[source_data[i].class_number for i in range(len(source_data))],
                        cmap=classColormap)
-        pyplot.show()
+        pyplot.savefig("out_data/clustering.png")
+

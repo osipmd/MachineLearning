@@ -1,7 +1,5 @@
-from Point import *
 from Statistics import *
 from Drawer import *
-import numpy as np
 
 
 class k_Nearest_Neighbor:
@@ -14,6 +12,7 @@ class k_Nearest_Neighbor:
         self.dist = dist
 
     def calculate_classification(self):
+        f_measure_sum = 0
         for i in range(self.number_cross_validation):
             train_data, test_data = self.split_data_set(i)
             result = self.kNN_classifier(train_data, test_data)
@@ -22,8 +21,13 @@ class k_Nearest_Neighbor:
                 data.append(point)
             for point in result:
                 data.append(point)
-            Drawer.draw_data(data, True, i)
-            print("F_measure: ", Statistics.count_f_measure(result, test_data))
+            if i == 3:
+                Drawer.showDataOnMesh(self.data, data)
+#            Drawer.draw_data(data, True, i)
+            f_measure_sum += Statistics.count_f_measure(result, test_data)
+        f_measure_average = f_measure_sum/self.number_cross_validation
+        print("F_measure average: ", f_measure_sum/self.number_cross_validation)
+        return f_measure_average
 
     def kNN_classifier(self, train_data, test_data):
         test_result = []
@@ -34,7 +38,7 @@ class k_Nearest_Neighbor:
             sorted_neighbours = sorted(neighbours)
             similarity = [0] * self.number_of_classes
             for neighbour in sorted_neighbours[0:self.number_k_Neighbor]:
-                class_of_neighbour = neighbour[1] 
+                class_of_neighbour = neighbour[1]
                 similarity[class_of_neighbour] += self.kernel(neighbour[0] / sorted_neighbours[self.number_k_Neighbor + 1][0])
             similarity_number_of_class = zip(similarity, range(self.number_of_classes))
             test_result_point = Point(test_point.x, test_point.y, sorted(similarity_number_of_class, reverse=True)[0][1])

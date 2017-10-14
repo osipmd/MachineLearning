@@ -36,9 +36,9 @@ random.shuffle(data)
 for name, dist in distances.items():
     print(name)
     result = []
-    #for number_k_Neighbor in range(2,21):
-    kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist, epanechnikov_kernel,
-                             data)
-    result.append(kNN.calculate_classification())
-    #Drawer.draw_graphic(result)
+    for number_k_Neighbor in range(2,21):
+        kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist, epanechnikov_kernel,
+                                 data)
+        result.append(kNN.calculate_classification())
+    Drawer.draw_graphic(result)
     print()  # read data from file

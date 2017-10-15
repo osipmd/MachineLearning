@@ -1,9 +1,11 @@
 import math
-#from Drawer import *
+# from Drawer import *
 import random
 
 from kNN import *
 
+
+# read data from file
 def read_data_from_file(filename):
     data = []
     with open(filename) as input_file:
@@ -24,21 +26,37 @@ distances = {
 
 # https://en.wikipedia.org/wiki/Kernel_(statistics)
 epanechnikov_kernel = lambda val: 0.75 * (1 - val * val)
-gaussian_kernel = lambda val: 1/math.sqrt(2*math.pi)*math.exp((-1/2)*val*val)
+gaussian_kernel = lambda val: 1 / math.sqrt(2 * math.pi) * math.exp((-1 / 2) * val * val)
 
 number_of_classes = 2
-number_k_Neighbor = 10
 number_cross_validation = 5
 data = read_data_from_file('chips.txt')
-random.shuffle(data)
+# random.shuffle(data)
 
-#Drawer.draw_data(data)
+# Drawer.draw_data(data)
+results = []
 for name, dist in distances.items():
     print(name)
-    result = []
-    for number_k_Neighbor in range(2,21):
-        kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist, epanechnikov_kernel,
+    for number_k_Neighbor in range(10, 11):
+        kNN = k_Nearest_Neighbor(number_of_classes, number_cross_validation, number_k_Neighbor, dist,
+                                 epanechnikov_kernel,
                                  data)
-        result.append(kNN.calculate_classification())
-    Drawer.draw_graphic(result)
-    print()  # read data from file
+        classification_results = kNN.calculate_classification()
+
+
+        results.append(classification_results)
+
+for result in results:
+    for unit in result.units:
+        print(unit)
+        for point in unit.test:
+            print(point, end=" , ")
+        print()
+        for point in unit.classified:
+            print(point, end=" , ")
+        print()
+        print(unit.count_confusion_matrix())
+
+#
+
+# print(results)

@@ -1,56 +1,34 @@
 class Statistics:
     @staticmethod
-    def count_tp(result, test_data):
-        count = 0
-        for i in range(len(result)):
-            if result[i].class_number == 1 and test_data[i].class_number == 1:
-                count += 1
-        return count
+    def count_recall(confusion_matrix):
+        col_num = len(confusion_matrix)
+        total_recall = 0
+        for i in range(col_num):
+            col_sum = sum(map(lambda row: row[i], confusion_matrix))
+            if col_sum == 0:
+                recall = 1
+            else:
+                recall = confusion_matrix[i][i] / col_sum
+            total_recall += recall
+        return total_recall / col_num
 
     @staticmethod
-    def count_fn(result, test_data):
-        count = 0
-        for i in range(len(result)):
-            if result[i].class_number == 0 and test_data[i].class_number == 1:
-                count += 1
-        return count
+    def count_precision(confusion_matrix):
+        row_num = len(confusion_matrix)
+        total_precision = 0
+        for i in range(row_num):
+            row_sum = sum(confusion_matrix[i])
+            if row_sum == 0:
+                precision = 1
+            else:
+                precision = confusion_matrix[i][i] / row_sum
+            total_precision += precision
+        return total_precision / row_num
 
     @staticmethod
-    def count_fp(result, test_data):
-        count = 0
-        for i in range(len(result)):
-            if result[i].class_number == 1 and test_data[i].class_number == 0:
-                count += 1
-        return count
-
-    @staticmethod
-    def count_tn(result, test_data):
-        count = 0
-        for i in range(len(result)):
-            if result[i].class_number == 0 and test_data[i].class_number == 0:
-                count += 1
-        return count
-
-    @staticmethod
-    def count_recall(result, test_data):
-        tp = Statistics.count_tp(result, test_data)
-        fn = Statistics.count_fn(result, test_data)
-        if tp == 0:
-            return 0
-        return tp / (tp + fn)
-
-    @staticmethod
-    def count_precision(result, test_data):
-        tp = Statistics.count_tp(result, test_data)
-        fp = Statistics.count_fp(result, test_data)
-        if tp == 0:
-            return 0
-        return tp / (tp + fp)
-
-    @staticmethod
-    def count_f_measure(result, test_data, beta=1):
-        precision = Statistics.count_precision(result, test_data)
-        recall = Statistics.count_recall(result, test_data)
+    def count_f_measure(confusion_matrix, beta=1):
+        precision = Statistics.count_precision(confusion_matrix)
+        recall = Statistics.count_recall(confusion_matrix)
         if precision == 0 or recall == 0:
             return 0
         else:

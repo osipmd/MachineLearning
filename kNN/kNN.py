@@ -1,5 +1,4 @@
-from Statistics import *
-from Drawer import *
+from kNN import *
 
 
 class k_Nearest_Neighbor:
@@ -53,28 +52,3 @@ class k_Nearest_Neighbor:
         train_data = self.data[0:start] + self.data[end:data_size]
         test_data = self.data[start:end]
         return train_data, test_data
-
-
-class ClassificationUnit:
-    def __init__(self, train, test, classified):
-        self.train = train
-        self.test = test
-        self.classified = classified
-
-    def count_confusion_matrix(self):
-        matrix = [[0, 0], [0, 0]]
-        for i in range(len(self.classified)):
-            fact = self.test[i]
-            predicted = self.classified[i]
-
-            # predicted for row in the matrix
-            # and fact for column
-            matrix[predicted.class_number][fact.class_number] += 1
-        return matrix
-
-class Classification:
-    def __init__(self):
-        self.units = []
-
-    def add_unit(self, unit):
-        self.units.append(unit)

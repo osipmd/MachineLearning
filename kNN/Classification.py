@@ -1,4 +1,5 @@
 from kNN import *
+from Statistics import *
 
 class Classification:
     def __init__(self):

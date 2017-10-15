@@ -1,7 +1,8 @@
 import math
 import random
 from kNN import *
-
+from Point import *
+from Classification import *
 
 def print_classification(classification):
     for unit in classification.units:
@@ -67,7 +68,7 @@ best_cross_validation_number = 0
 
 for kernel_name, kernel in kernels.items():
     for dist_name, dist in distances.items():
-        for cross_validation_number in range(5, 10):
+        for cross_validation_number in range(5, 20):
             for number_k_Neighbor in range(1, 94):
                 kNN = k_Nearest_Neighbor(number_of_classes, cross_validation_number, number_k_Neighbor, dist,
                                          kernel,

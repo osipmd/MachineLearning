@@ -1,6 +1,6 @@
 from kNN import *
-
-
+from Classification import *
+from Point import *
 class k_Nearest_Neighbor:
     def __init__(self, number_of_classes, number_cross_validation, number_k_Neighbor, dist, kernel, data):
         self.number_of_classes = number_of_classes

@@ -1,6 +1,6 @@
 from Point import *
 
-class kNN_count:
+class kNN_for_background:
     @staticmethod
     def classifyKNN(train_data, test_data):
         epanechnikov_kernel = lambda val: 0.75 * (1 - val * val)

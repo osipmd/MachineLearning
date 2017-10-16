@@ -3,6 +3,8 @@ import random
 from kNN import *
 from Point import *
 from Classification import *
+from Drawer import *
+
 
 def print_classification(classification):
     for unit in classification.units:
@@ -66,15 +68,21 @@ best_kernel_name = ''
 
 best_cross_validation_number = 0
 
+build_graphics = True
+f_measure_of_results = []
+
 for kernel_name, kernel in kernels.items():
     for dist_name, dist in distances.items():
-        for cross_validation_number in range(5, 20):
-            for number_k_Neighbor in range(1, 94):
+        for cross_validation_number in range(5, 10):
+            file_name = "out_data/f-measure/k_results_" + str(cross_validation_number) + ".png"
+            f_measure_of_results = []
+            for number_k_Neighbor in range(5, 20):
                 kNN = k_Nearest_Neighbor(number_of_classes, cross_validation_number, number_k_Neighbor, dist,
                                          kernel,
                                          data)
                 classification = kNN.calculate_classification()
                 cur_f_measure = classification.calc_f_measure()
+                f_measure_of_results.append(cur_f_measure)
 
                 if cur_f_measure > best_f_measure:
                     best_f_measure = cur_f_measure
@@ -85,10 +93,16 @@ for kernel_name, kernel in kernels.items():
                     best_kernel_name = kernel_name
                     best_cross_validation_number = cross_validation_number
 
+            if build_graphics:
+                Drawer.draw_graphic(file_name, f_measure_of_results, 5)
+
 kNN = k_Nearest_Neighbor(number_of_classes, best_cross_validation_number, best_number_k, best_dist,
                          best_kernel,
                          data)
 classification = kNN.calculate_classification()
+
+if build_graphics:
+    Drawer.define_class_of_space(classification)
 
 print('best k', best_number_k)
 print('best dist ', best_dist_name)

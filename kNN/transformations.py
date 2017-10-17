@@ -1,26 +1,23 @@
 import math
 from kNN import *
+from Point3D import *
 
 
 def data_to_polar(data):
-    new_data = []
-    for point in data:
-        r = math.sqrt(point.x ** 2 + point.y ** 2)
-        tg = math.atan(point.y / point.x)
-        new_point = Point(r, tg, point.class_number)
-        new_data.append(new_point)
-    return new_data
+    r = lambda p: math.sqrt(p.x ** 2 + p.y ** 2)
+    angle = lambda p: math.atan(p.y / p.x)
+    return list(map(lambda p: Point(r(p), angle(p), p.class_number), data))
 
 
 def mult_data(data, multiplier):
-    new_data = []
-    for point in data:
-        new_x = point.x * multiplier
-        new_y = point.y * multiplier
-        new_point = Point(new_x, new_y, point.class_number)
-        new_data.append(new_point)
-    return new_data
+    return list(map(lambda p: Point(p.x * multiplier, p.y * multiplier, p.class_number), data))
 
 
-def data_to_elliptic(data, a=1, b=2):
-    new_data = []
+def data_to_elliptic(data, a=1, b=1):
+    z = lambda x, y: (x / a) ** 2 + (y / b) ** 2
+    return list(map(lambda p: Point3D(p.x, p.y, z(p.x, p.y), p.class_number), data))
+
+
+def data_to_hyperbolic(data, a=1, b=1):
+    z = lambda x, y: (x / a) ** 2 - (y / b) ** 2
+    return list(map(lambda p: Point3D(p.x, p.y, z(p.x, p.y), p.class_number), data))

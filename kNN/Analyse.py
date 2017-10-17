@@ -15,7 +15,7 @@ data = read_data_from_file('chips.txt')
 
 # data = data_to_polar(data)
 # data = mult_data(data, 2)
-# random.shuffle(data)
+random.shuffle(data)
 
 best_number_k = 0
 best_f_measure = 0

@@ -1,4 +1,4 @@
-from Point import *
+from Point2D import *
 
 class kNN_for_background:
     @staticmethod
@@ -17,7 +17,7 @@ class kNN_for_background:
                 similarity[class_of_neighbour] += epanechnikov_kernel(
                     neighbour[0] / sorted_neighbours[10 + 1][0])
             similarity_number_of_class = zip(similarity, range(2))
-            test_result_point = Point(test_point.x, test_point.y,
-                                      sorted(similarity_number_of_class, reverse=True)[0][1])
+            test_result_point = Point2D(test_point.x, test_point.y,
+                                        sorted(similarity_number_of_class, reverse=True)[0][1])
             test_result.append(test_result_point)
         return test_result

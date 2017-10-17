@@ -3,7 +3,7 @@ from Classification import *
 from Point3D import *
 
 
-class k_Nearest_Neighbor:
+class K_Nearest_Neighbor_3D:
     def __init__(self, number_of_classes, number_cross_validation, number_k_Neighbor, dist, kernel, data):
         self.number_of_classes = number_of_classes
         self.number_cross_validation = number_cross_validation

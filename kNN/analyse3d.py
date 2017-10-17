@@ -1,6 +1,6 @@
 import random
-from kNN import *
-from Point2D import *
+from knn_3d import *
+from Point3D import *
 from Classification import *
 from transformations import *
 from Drawer import *
@@ -13,14 +13,14 @@ number_of_classes = 2
 
 data = read_data_from_file('chips.txt')
 
-# data = data_to_polar(data)
-# data = mult_data(data, 2)
-# random.shuffle(data)
+# data = data_to_elliptic(data)
+data = data_to_hyperbolic(data)
+random.shuffle(data)
 
 best_number_k = 0
 best_f_measure = 0
 
-best_dist = distances.get('euclidian')
+best_dist = distances_3d.get('euclidian')
 best_dist_name = ''
 
 best_kernel = kernels.get('epanechnikov')
@@ -32,12 +32,12 @@ build_graphics = True
 f_measure_of_results = []
 
 for kernel_name, kernel in kernels.items():
-    for dist_name, dist in distances.items():
+    for dist_name, dist in distances_3d.items():
         for cross_validation_number in range(5, 10):
             # file_name = "out_data/f-measure/k_results_" + str(cross_validation_number) + ".png"
             f_measure_of_results = []
             for number_k_Neighbor in range(5, 10):
-                kNN = k_Nearest_Neighbor(number_of_classes, cross_validation_number, number_k_Neighbor, dist,
+                kNN = K_Nearest_Neighbor_3D(number_of_classes, cross_validation_number, number_k_Neighbor, dist,
                                          kernel,
                                          data)
                 classification = kNN.calculate_classification()
@@ -56,7 +56,7 @@ for kernel_name, kernel in kernels.items():
             # if build_graphics:
             #     Drawer.draw_graphic(file_name, f_measure_of_results, 5)
 
-kNN = k_Nearest_Neighbor(number_of_classes, best_cross_validation_number, best_number_k, best_dist,
+kNN = K_Nearest_Neighbor_3D(number_of_classes, best_cross_validation_number, best_number_k, best_dist,
                          best_kernel,
                          data)
 classification = kNN.calculate_classification()

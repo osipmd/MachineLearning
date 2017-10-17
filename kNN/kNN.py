@@ -1,6 +1,6 @@
 from kNN import *
 from Classification import *
-from Point import *
+from Point2D import *
 class k_Nearest_Neighbor:
     def __init__(self, number_of_classes, number_cross_validation, number_k_Neighbor, dist, kernel, data):
         self.number_of_classes = number_of_classes
@@ -38,7 +38,7 @@ class k_Nearest_Neighbor:
             similarity_and_number_of_class = zip(similarity, range(self.number_of_classes))
             the_most_similar_class = sorted(similarity_and_number_of_class, reverse=True)[0][1]
 
-            test_result_point = Point(test_point.x, test_point.y, the_most_similar_class)
+            test_result_point = Point2D(test_point.x, test_point.y, the_most_similar_class)
             test_result.append(test_result_point)
         return test_result
 

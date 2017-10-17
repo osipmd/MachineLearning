@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot
 from matplotlib.colors import ListedColormap
 from kNN_for_background import *
-from Point import *
+from Point2D import *
 from Classification import *
 
 
@@ -53,7 +53,7 @@ class Drawer:
             background_data = []
             x = zip(background_space[0].ravel(), background_space[1].ravel())
             for i in x:
-                background_data.append(Point(i[0], i[1], 0))
+                background_data.append(Point2D(i[0], i[1], 0))
             result_labels = kNN_for_background.classifyKNN(result, background_data)
             class_array = []
             for point in result_labels:

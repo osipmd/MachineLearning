@@ -21,7 +21,7 @@ def read_data_from_file(filename):
     data = []
     with open(filename) as input_file:
         for line in input_file:
-            point = Point.from_str(line)
+            point = Point2D.from_str(line)
             data.append(point)
     return data
 

@@ -1,63 +1,21 @@
-import math
 import random
 from kNN import *
 from Point import *
 from Classification import *
 from transformations import *
 from Drawer import *
+from distances import *
+from kernels import *
+from utils import *
 
-
-def print_classification(classification):
-    for unit in classification.units:
-        print(unit)
-        for point in unit.test:
-            print(point, end=" , ")
-        print()
-        for point in unit.classified:
-            print(point, end=" , ")
-        print()
-        print(unit.calculate_confusion_matrix())
-        matrix = unit.calculate_confusion_matrix()
-        print(Statistics.count_recall(matrix))
-        print(Statistics.count_precision(matrix))
-        print(Statistics.count_f_measure(matrix))
-    print('f_measure ', classification.calc_f_measure())
-
-
-# read data from file
-def read_data_from_file(filename):
-    data = []
-    with open(filename) as input_file:
-        for line in input_file:
-            point = Point.from_str(line)
-            data.append(point)
-    return data
-
-# We can use different distance. Default - Euclidean distance
-minkowski_distance = lambda a, b, p: (abs((b.x - a.x) ** p) + abs((b.y - a.y) ** p)) ** (1 / p)
-
-distances = {
-    # 'manhattan': lambda a, b: minkowski_distance(a, b, 1),
-    'euclidian': lambda a, b: minkowski_distance(a, b, 2),
-    # 'third': lambda a, b: minkowski_distance(a, b, 3)
-}
-
-# https://en.wikipedia.org/wiki/Kernel_(statistics)
-kernels = {
-    'epanechnikov': lambda val: 0.75 * (1 - val * val),
-    'gaussian': lambda val: 1 / math.sqrt(2 * math.pi) * math.exp((-1 / 2) * val * val),
-    # 'uniform': lambda val: 1 / 2,
-    # 'triangular': lambda val: 1 - abs(val),
-    # 'quartic': lambda val: 15 / 16 * (1 - val ** 2) ** 2
-}
 
 number_of_classes = 2
 
 data = read_data_from_file('chips.txt')
 
 # data = data_to_polar(data)
-data = mult_data(data, 2)
-random.shuffle(data)
+# data = mult_data(data, 2)
+# random.shuffle(data)
 
 best_number_k = 0
 best_f_measure = 0

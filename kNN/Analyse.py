@@ -3,6 +3,7 @@ import random
 from kNN import *
 from Point import *
 from Classification import *
+from transformations import *
 from Drawer import *
 
 
@@ -32,31 +33,13 @@ def read_data_from_file(filename):
             data.append(point)
     return data
 
-def data_to_polar(data):
-    new_data = []
-    for point in data:
-        r = math.sqrt(point.x ** 2 + point.y ** 2)
-        tg = math.atan(point.y / point.x)
-        new_point = Point(r, tg, point.class_number)
-        new_data.append(new_point)
-    return new_data
-
-def mult_data(data, multiplier):
-    new_data = []
-    for point in data:
-        new_x = point.x * multiplier
-        new_y = point.y * multiplier
-        new_point = Point(new_x, new_y, point.class_number)
-        new_data.append(new_point)
-    return new_data
-
 # We can use different distance. Default - Euclidean distance
 minkowski_distance = lambda a, b, p: (abs((b.x - a.x) ** p) + abs((b.y - a.y) ** p)) ** (1 / p)
 
 distances = {
-    'manhattan': lambda a, b: minkowski_distance(a, b, 1),
+    # 'manhattan': lambda a, b: minkowski_distance(a, b, 1),
     'euclidian': lambda a, b: minkowski_distance(a, b, 2),
-    'third': lambda a, b: minkowski_distance(a, b, 3)
+    # 'third': lambda a, b: minkowski_distance(a, b, 3)
 }
 
 # https://en.wikipedia.org/wiki/Kernel_(statistics)
@@ -93,7 +76,7 @@ f_measure_of_results = []
 for kernel_name, kernel in kernels.items():
     for dist_name, dist in distances.items():
         for cross_validation_number in range(5, 10):
-            file_name = "out_data/f-measure/k_results_" + str(cross_validation_number) + ".png"
+            # file_name = "out_data/f-measure/k_results_" + str(cross_validation_number) + ".png"
             f_measure_of_results = []
             for number_k_Neighbor in range(5, 10):
                 kNN = k_Nearest_Neighbor(number_of_classes, cross_validation_number, number_k_Neighbor, dist,
@@ -112,16 +95,16 @@ for kernel_name, kernel in kernels.items():
                     best_kernel_name = kernel_name
                     best_cross_validation_number = cross_validation_number
 
-            if build_graphics:
-                Drawer.draw_graphic(file_name, f_measure_of_results, 5)
+            # if build_graphics:
+            #     Drawer.draw_graphic(file_name, f_measure_of_results, 5)
 
 kNN = k_Nearest_Neighbor(number_of_classes, best_cross_validation_number, best_number_k, best_dist,
                          best_kernel,
                          data)
 classification = kNN.calculate_classification()
 
-if build_graphics:
-    Drawer.define_class_of_space(classification)
+# if build_graphics:
+#     Drawer.define_class_of_space(classification)
 
 print('best k', best_number_k)
 print('best dist ', best_dist_name)

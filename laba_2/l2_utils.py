@@ -17,5 +17,6 @@ def rms_error(real, predicted):
     l = len(real)
     return sum(map(sqr_fun, zip(real, predicted))) / l
 
+
 def create_model(coeffs):
     return lambda point: point.area * coeffs[0] + point.rooms * coeffs[1] + 1 * coeffs[2]

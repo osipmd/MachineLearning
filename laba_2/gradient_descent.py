@@ -16,7 +16,7 @@ class GradientDescent:
                 gradient = GradientDescent.calc_gradient_by_hand(data, w)
             else:
                 gradient = GradientDescent.calc_gradient(x, w, y)
-            w -= eta * gradient
+            w = w - eta * gradient
 
         return w.reshape(1, 3)[0]
 

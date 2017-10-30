@@ -77,11 +77,11 @@ def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
 flats = read_data()
 
 target = 0
-p_count = 100
-i_length = 3
-i_min = -1000
-i_max = 1000
-p = population(p_count, i_length, i_min, i_max)
+population_count = 100
+vector_length = 3
+min_coeff = -1000
+max_coeff = 1000
+p = population(population_count, vector_length, min_coeff, max_coeff)
 fitness_history = [grade(p, target), ]
 best_fitness = 100000000000000000
 best_population = []
@@ -93,11 +93,6 @@ for i in range(1000):
         best_fitness = grade_result
         best_population = p
 
-#for datum in fitness_history:
-#   print(datum)
-
-print("Best fitness : ", best_fitness)
-print("Best population : ", best_population)
 graded = [(fitness(x, target), x) for x in best_population]
 graded_result = [x[0] for x in sorted(graded)][0]
 graded_vector = [x[1] for x in sorted(graded)][0]

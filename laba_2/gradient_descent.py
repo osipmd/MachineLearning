@@ -3,20 +3,22 @@ import numpy as np
 
 class GradientDescent:
     @staticmethod
-    def calc(data, by_hand=False):
+    def calc(data, eps=0.001, k=0.0000001, by_hand=False):
         w = np.array([0, 0, 0]).reshape(3, 1)
         x = np.array(list(map(lambda point: point.get_attrs_list(), data)))
         y = np.array(list(map(lambda point: [point.price], data)))
+        w_prev = None
 
-        k = 0.000000001
-
-        for step in range(1, 1000):
-            eta = k
+        step = 0
+        while w_prev is None or np.linalg.norm(w_prev - w) >= eps:
+            step += 1
+            w_prev = w
+            eta = k / step
             if by_hand:
-                gradient = GradientDescent.calc_gradient_by_hand(data, w)
+                gradient = GradientDescent.calc_gradient_by_hand(data, w_prev)
             else:
-                gradient = GradientDescent.calc_gradient(x, w, y)
-            w = w - eta * gradient
+                gradient = GradientDescent.calc_gradient(x, w_prev, y)
+            w = w_prev - eta * gradient
 
         return w.reshape(1, 3)[0]
 

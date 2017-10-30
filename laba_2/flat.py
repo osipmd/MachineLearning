@@ -1,5 +1,5 @@
-class Point:
-    def __init__(self, area, rooms, price):
+class Flat:
+    def __init__(self, area, rooms, price=0):
         self.area = area
         self.rooms = rooms
         self.price = price

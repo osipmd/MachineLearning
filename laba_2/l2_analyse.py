@@ -5,14 +5,14 @@ from l2_drawer import *
 flats = read_data()
 
 
-# coeffs = AnalyticRegression.calc(flats)
+coeffs = AnalyticRegression.calc(flats)
 
 
 
-gd = GradientDescent()
+# gd = GradientDescent()
 # coeffs = gd.calc(flats)
 # to use had-written gradient calc function
-coeffs = gd.calc(flats, by_hand=True)
+# coeffs = gd.calc(flats, by_hand=True)
 
 print(coeffs)
 
@@ -25,14 +25,10 @@ error = rms_error(y, predicted_y)
 print("RMS : ", error)
 print("sqrt(RMS) : ", math.sqrt(error))
 
-errors = step_error(gd.all_coeffs, flats)
 
-Drawer().draw_step_error(errors)
+
+# errors = step_error(gd.all_coeffs, flats)
+# Drawer().draw_step_error(errors)
 
 # print(list(map(lambda error: math.sqrt(error), step_error(gd.all_coeffs, flats))))
 
-# while True:
-#     area = int(input("area : "))
-#     rooms = int(input("rooms : "))
-#     flat = Flat(area, rooms)
-#     print("predicted price : ", model(flat))

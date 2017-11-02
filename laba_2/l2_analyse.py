@@ -1,3 +1,5 @@
+import os
+
 from l2_utils import *
 from analitic_regression import *
 from gradient_descent import *
@@ -6,6 +8,7 @@ from l2_drawer import *
 flats, max_area, max_rooms, max_price = normalize(read_data())
 
 print(max_area, max_rooms, max_price)
+
 
 def analyse_coeffs(flats, coeffs, k=None, eps=None):
     model = create_model(coeffs)
@@ -45,7 +48,8 @@ def count_gradient_descent_by_hand(flats):
     # errors = step_error(gd.all_coeffs, flats)
     # Drawer().draw_step_error(errors[1:])
 
-
+if not os.path.exists("out"):
+    os.makedirs("out")
 with open('out/error.txt', 'w') as f:
     f.write("")
 
@@ -62,12 +66,10 @@ for k in arr:
         print(counter)
     count_gradient_descent(flats, k=k)
 
-
-
 with open('out/error.txt') as f:
     rms = "RMS : "
     min_error = min(list(map(lambda line: float(line.rstrip()[len(rms):]),
-                   filter(lambda line: line.startswith(rms), f.readlines()))))
+                             filter(lambda line: line.startswith(rms), f.readlines()))))
     print(min_error)
     print(np.math.sqrt(min_error))
 # print(arr)

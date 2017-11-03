@@ -1,8 +1,7 @@
 import random
-
 import math
 
-from l2_utils import read_data, create_model, rms_error
+from l2_utils import read_data, create_model, rms_error, read_normalized_data
 
 
 def individual(length, min, max):
@@ -74,13 +73,13 @@ def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
     parents.extend(children)
     return parents
 
-flats = read_data()
-
+flats = read_normalized_data()
+print(flats[0].price)
 target = 0
-population_count = 100
+population_count = 80
 vector_length = 3
-min_coeff = -1000
-max_coeff = 1000
+min_coeff = -10000
+max_coeff = 10000
 p = population(population_count, vector_length, min_coeff, max_coeff)
 fitness_history = [grade(p, target), ]
 best_fitness = 100000000000000000
@@ -99,3 +98,17 @@ graded_vector = [x[1] for x in sorted(graded)][0]
 print("The best result : ", graded_result)
 print("The best vector : ", graded_vector)
 print("Sqrt of the best result : ", math.sqrt(graded_result))
+
+flats_check = read_data()
+
+coeffs = graded_vector
+print(coeffs)
+
+model = create_model(coeffs)
+
+y = list(map(lambda flat: flat.price, flats_check))
+predicted_y = list(map(lambda flat: model(flat), flats_check))
+#
+error = rms_error(y, predicted_y)
+print("RMS : ", error)
+print("sqrt(RMS) : ", math.sqrt(error))

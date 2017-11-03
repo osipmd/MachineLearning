@@ -1,6 +1,6 @@
 *.xml
 *.png
-
+out/
 .idea
 
 out_data

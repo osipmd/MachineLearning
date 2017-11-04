@@ -7,8 +7,6 @@ from l2_drawer import *
 
 flats, max_area, max_rooms, max_price = normalize(read_data())
 
-print(max_area, max_rooms, max_price)
-
 
 def analyse_coeffs(flats, coeffs, k=None, eps=None):
     model = create_model(coeffs)
@@ -48,28 +46,17 @@ def count_gradient_descent_by_hand(flats):
     # errors = step_error(gd.all_coeffs, flats)
     # Drawer().draw_step_error(errors[1:])
 
+
 if not os.path.exists("out"):
     os.makedirs("out")
 with open('out/error.txt', 'w') as f:
     f.write("")
 
-# count_analytic(flats)
-# count_gradient_descent(flats)
-# count_gradient_descent_by_hand(flats)
+x, y = read_data_to_two_set()
+x = (x - x.mean()) / x.std()
 
-arr = np.arange(0.0000001, 0.00001, 0.0000001)
-counter = 0
+gd = GradientDescent()
+coeffs = gd.calc_normalize(x, y)
+print(coeffs)
+print(math.sqrt(get_error(x, y, coeffs)))
 
-for k in arr:
-    counter += 1
-    if counter % 100 == 0:
-        print(counter)
-    count_gradient_descent(flats, k=k)
-
-with open('out/error.txt') as f:
-    rms = "RMS : "
-    min_error = min(list(map(lambda line: float(line.rstrip()[len(rms):]),
-                             filter(lambda line: line.startswith(rms), f.readlines()))))
-    print(min_error)
-    print(np.math.sqrt(min_error))
-# print(arr)

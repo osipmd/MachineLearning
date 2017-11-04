@@ -6,6 +6,8 @@ import numpy as np
 class GradientDescent:
     def __init__(self):
         self.all_coeffs = []
+        self.y_std = 0
+        self.y_mean = 0
 
     def calc(self, data, eps=0.001, k=0.0000001, by_hand=False):
         w1 = random.uniform(-1 / 6, 1 / 6)
@@ -30,8 +32,50 @@ class GradientDescent:
                 gradient = self.calc_gradient(x, w_prev, y)
             w = w_prev - eta * gradient
 
-        # self.all_coeffs.append(w.reshape(1, 3)[0])
         return w.reshape(1, 3)[0]
+
+    def calc_normalize(self, x, y):
+        w = np.ones(x.shape[1]).reshape(3, 1)
+        self.y_mean = y.mean()
+        self.y_std = y.std()
+        y_normal = (y - self.y_mean) / self.y_std
+        iterations = 5000
+        q_prev = None
+        q = None
+
+        step = 0
+        for i in range(iterations):
+            step += 1
+            hypothesis = np.dot(x, w)
+            loss = hypothesis - y_normal
+            w_prev = w
+            alpha = 0.1
+            if i > 0:
+                q = self.error(x, y_normal, w)
+            if i > 1:
+                alpha = self.chose_alpha(q, q_prev)
+            gradient = np.dot(x.transpose(), loss) / x.shape[0] * 2
+            w = w_prev - alpha * gradient
+
+            q_prev = q
+
+        return w
+
+    def chose_alpha(self, q, q_prev):
+        diff = np.abs(q - q_prev)
+
+        if diff < 10:
+            return 1400000
+        if diff < 100:
+            return 0.13
+        if diff < 1000:
+            return 0.01
+        return 0.1
+
+    def error(self, x, y, w):
+        predict = np.dot(x, w) * self.y_std + self.y_mean
+        err = np.dot((y - predict).transpose(), (y - predict))
+        return err / predict.shape[0]
 
     def calc_gradient(self, x, w, y):
         l = len(y)

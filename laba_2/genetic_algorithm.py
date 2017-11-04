@@ -1,15 +1,26 @@
 import random
 import math
 
-from l2_utils import read_data, create_model, rms_error, read_normalized_data
+import numpy as np
+
+from l2_utils import read_data, create_model, rms_error, read_normalized_data, read_data_to_two_set, get_error
+
+best_fitness = 100000000000000000
+best_individ = []
 
 
 def individual(length, min, max):
-    return [random.uniform(min, max) for i in range(length)]
+    area = random.uniform(1, 2)
+    rooms = random.uniform(-80, -70)
+    free = random.uniform(60, 80)
+    return [area, rooms, free]
 
 
 def population(count, length, min, max):
-    return [individual(length, min, max) for i in range(count)]
+    individ_arr = [individual(length, min, max) for i in range(count)]
+    #individ_arr.append([1.21688203, -73.63460208, 75.74440802])
+    return individ_arr
+
 
 """
 def fitness(individ, target):
@@ -19,24 +30,30 @@ def fitness(individ, target):
     return abs(target - sum)
 """
 
-def fitness(individ, target):
-    model = create_model(individ)
-    y = list(map(lambda flat: flat.price, flats))
-    predicted_y = list(map(lambda flat: model(flat), flats))
-    error = rms_error(y, predicted_y)
+
+def fitness(individ, target, x, y):
+    individ = np.array(individ).reshape(3, 1)
+    error = get_error(x, y, individ)
     return abs(target - error)
 
-def grade(pop, target):
+
+def grade(pop, target, x, y):
+    global best_fitness
+    global best_individ
     sum = 0
     for individ in pop:
-        sum += fitness(individ, target)
+        fit = fitness(individ, target, x, y)
+        if best_fitness > fit:
+            best_fitness = fit
+            best_individ = individ
+        sum += fit
     return sum / (len(pop) * 1.0)
 
 
-def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
+def evolve(pop, target, x, y, retain=0.2, random_select=0.05, mutate=0.01):
     # get fitness for current population
-    graded = [(fitness(x, target), x) for x in pop]
-    graded = [x[1] for x in sorted(graded)]
+    graded = [(fitness(individ, target, x, y), individ) for individ in pop]
+    graded = [individ[1] for individ in sorted(graded)]
     # define retain size
     retain_length = int(len(graded) * retain)
     # get the best individuals for crossover
@@ -73,42 +90,28 @@ def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
     parents.extend(children)
     return parents
 
-flats = read_normalized_data()
-print(flats[0].price)
+
+flats = read_data()
+x, y = read_data_to_two_set()
+x_n = (x - x.mean()) / x.std()
+y_n = np.copy(y)
+y_n = (y_n - y.mean()) / y.std()
+
 target = 0
-population_count = 80
+population_count = 100
 vector_length = 3
-min_coeff = -10000
-max_coeff = 10000
+min_coeff = -100
+max_coeff = 100
 p = population(population_count, vector_length, min_coeff, max_coeff)
-fitness_history = [grade(p, target), ]
-best_fitness = 100000000000000000
+fitness_history = [grade(p, target, x_n, y), ]
 best_population = []
-for i in range(1000):
-    p = evolve(p, target)
-    grade_result = grade(p, target)
+
+for i in range(3000):
+    p = evolve(p, target, x_n, y)
+    grade_result = grade(p, target, x_n, y)
     fitness_history.append(grade_result)
     if grade_result < best_fitness:
         best_fitness = grade_result
         best_population = p
 
-graded = [(fitness(x, target), x) for x in best_population]
-graded_result = [x[0] for x in sorted(graded)][0]
-graded_vector = [x[1] for x in sorted(graded)][0]
-print("The best result : ", graded_result)
-print("The best vector : ", graded_vector)
-print("Sqrt of the best result : ", math.sqrt(graded_result))
-
-flats_check = read_data()
-
-coeffs = graded_vector
-print(coeffs)
-
-model = create_model(coeffs)
-
-y = list(map(lambda flat: flat.price, flats_check))
-predicted_y = list(map(lambda flat: model(flat), flats_check))
-#
-error = rms_error(y, predicted_y)
-print("RMS : ", error)
-print("sqrt(RMS) : ", math.sqrt(error))
+print("The best result: ", math.sqrt(best_fitness))

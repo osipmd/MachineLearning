@@ -15,6 +15,17 @@ def read_data(path_to_file='src_data/prices_without_head.txt'):
     return flats
 
 
+def read_data_to_two_set(path_to_file='src_data/prices_without_head.txt'):
+    x = []
+    y = []
+    with open(path_to_file) as f:
+        for line in f:
+            area, rooms, price = map(int, line.split(','))
+            x.append([area, rooms, 1.0])
+            y.append([price])
+    return np.array(x), np.array(y)
+
+
 def normalize_data(path_to_file='src_data/prices_without_head.txt'):
     flats = []
     with open(path_to_file) as f:
@@ -74,3 +85,8 @@ def normalize(flats):
         flat.rooms /= max_rooms
         flat.price /= max_price
     return flats, max_area, max_rooms, max_price
+
+def get_error(x, y, coeffs):
+    predict = np.dot(x, coeffs) * y.std() + y.mean()
+    err = np.dot((y - predict).transpose(), (y - predict))
+    return err / (predict.shape[0])

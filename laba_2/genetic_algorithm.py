@@ -18,7 +18,6 @@ def individual(length, min, max):
 
 def population(count, length, min, max):
     individ_arr = [individual(length, min, max) for i in range(count)]
-    #individ_arr.append([1.21688203, -73.63460208, 75.74440802])
     return individ_arr
 
 

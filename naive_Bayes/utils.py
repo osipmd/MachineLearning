@@ -31,12 +31,12 @@ def read_files_from_directory(number_of_file, dir_name=os.getcwd() + '/source_te
     ham_dict = {}
 
     for filename in os.listdir(absolute_path):
-        if 'spmsg' in filename:
+        if is_filename_contains_spmsg(filename):
             spam_count += 1
             spam_dict_from_file = read_file(absolute_path + filename)
             spam_dict = {k: spam_dict.get(k, 0) + spam_dict_from_file.get(k, 0)
                          for k in set(spam_dict) | set(spam_dict_from_file)}
-        if 'legit' in filename:
+        if is_filename_contains_legit(filename):
             ham_count += 1
             ham_dict_from_file = read_file(absolute_path + filename)
             ham_dict = {k: ham_dict.get(k, 0) + ham_dict_from_file.get(k, 0)
@@ -63,3 +63,17 @@ def parse_line(line):
         else:
             dict[word] = 1
     return dict
+
+
+def is_filename_contains_spmsg(filename):
+    if 'spmsg' in filename:
+        return True
+    else:
+        return False
+
+
+def is_filename_contains_legit(filename):
+    if 'legit' in filename:
+        return True
+    else:
+        return False

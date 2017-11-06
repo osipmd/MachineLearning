@@ -1,6 +1,25 @@
 import os
 
 
+def read_all_dirs_except(except_number_of_dir):
+    global_spam_count = 0
+    global_ham_count = 0
+
+    global_spam_dict = {}
+    global_ham_dict = {}
+
+    for i in range(10):
+        if (i + 1) == except_number_of_dir:
+            continue
+        spam_count, ham_count, spam_dict, ham_dict = read_files_from_directory(i + 1)
+        global_spam_count += spam_count
+        global_ham_count += ham_count
+        global_spam_dict = {k: global_spam_dict.get(k, 0) + spam_dict.get(k, 0)
+                        for k in set(global_spam_dict) | set(spam_dict)}
+        global_ham_dict = {k: global_ham_dict.get(k, 0) + ham_dict.get(k, 0)
+                        for k in set(global_ham_dict) | set(ham_dict)}
+
+    return global_spam_count, global_ham_count, global_spam_dict, global_ham_dict
 
 
 def read_files_from_directory(number_of_file, dir_name=os.getcwd() + '/source_texts/part'):
@@ -24,6 +43,7 @@ def read_files_from_directory(number_of_file, dir_name=os.getcwd() + '/source_te
                         for k in set(ham_dict) | set(ham_dict_from_file)}
     return spam_count, ham_count, spam_dict, ham_dict
 
+
 def read_file(filename):
     i = 0
     with open(filename) as file:
@@ -43,5 +63,3 @@ def parse_line(line):
         else:
             dict[word] = 1
     return dict
-
-

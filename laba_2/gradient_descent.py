@@ -34,30 +34,28 @@ class GradientDescent:
 
         return w.reshape(1, 3)[0]
 
-    def calc_normalize(self, x, y):
+    def calc_normalize(self, x, y, iterations = 5000):
         w = np.ones(x.shape[1]).reshape(3, 1)
         self.y_mean = y.mean()
         self.y_std = y.std()
         y_normal = (y - self.y_mean) / self.y_std
-        iterations = 5000
         q_prev = None
         q = None
 
         step = 0
-        for i in range(iterations):
+        while q_prev is None or step < iterations and abs(q - q_prev) > 1:
             step += 1
             hypothesis = np.dot(x, w)
             loss = hypothesis - y_normal
+            q_prev = q
             w_prev = w
             alpha = 0.1
-            if i > 0:
+            if step > 0:
                 q = self.error(x, y_normal, w)
-            if i > 1:
+            if step > 1:
                 alpha = self.chose_alpha(q, q_prev)
             gradient = np.dot(x.transpose(), loss) / x.shape[0] * 2
             w = w_prev - alpha * gradient
-
-            q_prev = q
 
         return w
 

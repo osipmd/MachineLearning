@@ -1,7 +1,7 @@
 import os
 
 
-def read_all_dirs_except(except_number_of_dir):
+def read_dirs_statistics_except_dir(except_number_of_dir):
     global_spam_count = 0
     global_ham_count = 0
 
@@ -15,30 +15,30 @@ def read_all_dirs_except(except_number_of_dir):
         global_spam_count += spam_count
         global_ham_count += ham_count
         global_spam_dict = {k: global_spam_dict.get(k, 0) + spam_dict.get(k, 0)
-                        for k in set(global_spam_dict) | set(spam_dict)}
+                            for k in set(global_spam_dict) | set(spam_dict)}
         global_ham_dict = {k: global_ham_dict.get(k, 0) + ham_dict.get(k, 0)
-                        for k in set(global_ham_dict) | set(ham_dict)}
+                           for k in set(global_ham_dict) | set(ham_dict)}
 
     return global_spam_count, global_ham_count, global_spam_dict, global_ham_dict
 
 
 def read_files_from_directory(number_of_file, dir_name=os.getcwd() + '/source_texts/part'):
-    absolutle_path = dir_name + str(number_of_file) + '/'
+    absolute_path = dir_name + str(number_of_file) + '/'
     spam_count = 0
     ham_count = 0
 
     spam_dict = {}
     ham_dict = {}
 
-    for filename in os.listdir(absolutle_path):
+    for filename in os.listdir(absolute_path):
         if 'spmsg' in filename:
             spam_count += 1
-            spam_dict_from_file = read_file(absolutle_path + filename)
+            spam_dict_from_file = read_file(absolute_path + filename)
             spam_dict = {k: spam_dict.get(k, 0) + spam_dict_from_file.get(k, 0)
                          for k in set(spam_dict) | set(spam_dict_from_file)}
         if 'legit' in filename:
             ham_count += 1
-            ham_dict_from_file = read_file(absolutle_path + filename)
+            ham_dict_from_file = read_file(absolute_path + filename)
             ham_dict = {k: ham_dict.get(k, 0) + ham_dict_from_file.get(k, 0)
                         for k in set(ham_dict) | set(ham_dict_from_file)}
     return spam_count, ham_count, spam_dict, ham_dict

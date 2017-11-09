@@ -11,7 +11,7 @@ from smart_dict import smart_dict
 
 def train(number_of_test_dir):
     spam_count, ham_count, spam_dict, ham_dict = read_dirs_statistics_except_dir(number_of_test_dir)
-    p_spam, p_ham, spam_dict, ham_dict = get_probabilities_from_train(spam_count, ham_count, spam_dict, ham_dict)
+    p_spam, p_ham, spam_dict, ham_dict = get_probabilities_for_train(spam_count, ham_count, spam_dict, ham_dict)
     return p_spam, p_ham, spam_dict, ham_dict
 
 
@@ -50,7 +50,7 @@ def get_probabilities_for_test(dict_from_file, p_spam, p_ham, spam_dict, ham_dic
     return spam_probability, ham_probability
 
 
-def get_probabilities_from_train(spam_count, ham_count, spam_dict, ham_dict):
+def get_probabilities_for_train(spam_count, ham_count, spam_dict, ham_dict):
     p_spam = spam_count / (spam_count + ham_count)
     p_ham = ham_count / (spam_count + ham_count)
     return p_spam, p_ham, spam_dict, ham_dict

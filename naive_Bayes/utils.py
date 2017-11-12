@@ -1,5 +1,7 @@
 import os
 
+import numpy
+
 
 def read_dirs_statistics_except_dir(except_number_of_dir):
     global_spam_count = 0
@@ -94,3 +96,8 @@ def union_two_dict(dict1, dict2):
     union_dict = {k: dict1.get(k, 0) + dict2.get(k, 0)
                   for k in set(dict1) | set(dict2)}
     return union_dict
+
+
+def get_spam_percentage(spam_probability, ham_probability):
+    spam_percentage = 1 / (1 + numpy.exp(ham_probability - spam_probability))
+    return spam_percentage

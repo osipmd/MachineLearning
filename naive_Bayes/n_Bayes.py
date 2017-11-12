@@ -3,6 +3,7 @@ import os
 
 import scipy
 
+from utils import get_spam_percentage
 from utils import is_filename_contains_legit
 from utils import is_filename_contains_spmsg
 from utils import read_dirs_statistics_except_dir, read_file
@@ -15,25 +16,30 @@ def train(number_of_test_dir):
     return p_spam, p_ham, spam_dict, ham_dict
 
 
-def test(number_of_test_dir, p_spam, p_ham, spam_dict, ham_dict):
+def test(number_of_test_dir, p_spam, p_ham, spam_dict, ham_dict, save_ham):
     conflusion_matrix = scipy.array([[0, 0], [0, 0]])
     absolute_path = os.getcwd() + '/source_texts/part' + str(number_of_test_dir) + '/'
     for filename in os.listdir(absolute_path):
         dict_from_file = read_file(absolute_path + filename)
         spam_probability, ham_probability = get_probabilities_for_test(dict_from_file, p_spam, p_ham, spam_dict,
                                                                        ham_dict)
-        if spam_probability > ham_probability and is_filename_contains_spmsg(filename):
+        if save_ham == True:
+            percentage = 1.0
+        else:
+            percentage = 0.5
+        spam_percentage = get_spam_percentage(spam_probability, ham_probability)
+        if spam_percentage >= percentage and is_filename_contains_spmsg(filename):
             conflusion_matrix[0][0] += 1
-        elif spam_probability > ham_probability and is_filename_contains_legit(filename):
+        elif spam_percentage >= percentage and is_filename_contains_legit(filename):
             conflusion_matrix[0][1] += 1
-        elif spam_probability <= ham_probability and is_filename_contains_spmsg(filename):
+        elif spam_percentage < percentage and is_filename_contains_spmsg(filename):
             conflusion_matrix[1][0] += 1
-        elif spam_probability <= ham_probability and is_filename_contains_legit(filename):
+        elif spam_percentage < percentage and is_filename_contains_legit(filename):
             conflusion_matrix[1][1] += 1
 
     return conflusion_matrix
 
-def get_probabilities_for_test(dict_from_file, p_spam, p_ham, spam_dict, ham_dict, coeffs_blur=1):
+def get_probabilities_for_test(dict_from_file, p_spam, p_ham, spam_dict, ham_dict, coeffs_blur=0.2):
     spam_probability = math.log(p_spam)
     ham_probability = math.log(p_ham)
 

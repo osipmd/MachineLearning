@@ -40,7 +40,7 @@ def test(number_of_test_dir, p_spam, p_ham, spam_dict, ham_dict, save_ham):
     return conflusion_matrix
 
 
-def get_probabilities_for_test(dict_from_file, p_spam, p_ham, spam_dict, ham_dict, coeffs_blur=0.001):
+def get_probabilities_for_test(dict_from_file, p_spam, p_ham, spam_dict, ham_dict, coeff_blur=0.001):
     spam_probability = math.log(p_spam)
     ham_probability = math.log(p_ham)
 
@@ -50,9 +50,9 @@ def get_probabilities_for_test(dict_from_file, p_spam, p_ham, spam_dict, ham_dic
     ham_smart_dict = smart_dict(ham_dict)
 
     for key in dict_from_file.keys():
-        spam_probability += math.log(dict_from_file[key] * (spam_smart_dict[key] + coeffs_blur) /
+        spam_probability += math.log(dict_from_file[key] * (spam_smart_dict[key] + coeff_blur) /
                                      (sum_spam + 1 * len(spam_smart_dict)))
-        ham_probability += math.log(dict_from_file[key] * (ham_smart_dict[key] + coeffs_blur) /
+        ham_probability += math.log(dict_from_file[key] * (ham_smart_dict[key] + coeff_blur) /
                                     (sum_ham + 1 * len(ham_smart_dict)))
     return spam_probability, ham_probability
 

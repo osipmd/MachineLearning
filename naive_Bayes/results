@@ -1,0 +1,9 @@
+save_ham = False
+[[469  11]
+ [ 11 599]]
+F-measure :  0.979525273224
+
+save_ham = True
+[[429   2]
+ [ 51 608]]
+F-measure :  0.952060601858

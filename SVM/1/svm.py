@@ -1,8 +1,7 @@
-import numpy as np
-import cvxopt.solvers
 import logging
 
-from sklearn.cross_validation import cross_val_score, train_test_split
+import cvxopt.solvers
+import numpy as np
 
 from kernel import Kernel
 from utils import read_data_from_file

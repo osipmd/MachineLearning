@@ -100,27 +100,6 @@ class SVM(object):
 if __name__ == "__main__":
     import pylab as pl
 
-
-    def split_train(X1, y1, X2, y2):
-        X1_train = X1[:90]
-        y1_train = y1[:90]
-        X2_train = X2[:90]
-        y2_train = y2[:90]
-        X_train = np.vstack((X1_train, X2_train))
-        y_train = np.hstack((y1_train, y2_train))
-        return X_train, y_train
-
-
-    def split_test(X1, y1, X2, y2):
-        X1_test = X1[90:]
-        y1_test = y1[90:]
-        X2_test = X2[90:]
-        y2_test = y2[90:]
-        X_test = np.vstack((X1_test, X2_test))
-        y_test = np.hstack((y1_test, y2_test))
-        return X_test, y_test
-
-
     def plot_margin(X1_train, X2_train, clf):
         def f(x, w, b, c=0):
             # given x, return y such that [x,y] in on the line

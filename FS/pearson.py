@@ -11,15 +11,14 @@ def count_all_pearson_correlation_coefficient(X, Y):
 def count_pearson_correlation_coefficient(X, Y):
     x_mean = X.mean()
     y_mean = Y.mean()
-    x = 0
+    numerator = 0
     x_2 = 0
-    y = 0
     y_2 = 0
-    for x_element in X:
-        x += (x_element - x_mean)
+    for i in range(len(X)):
+        x_element = X[i]
+        y_element = Y[i]
+        numerator += x_element * y_element
         x_2 += (x_element - x_mean) ** 2
-    for y_element in Y:
-        y += (y_element - y_mean)
         y_2 += (y_element - y_mean) ** 2
-    pearson_coefficient = x * y / math.sqrt(x_2 * y_2)
+    pearson_coefficient = numerator / math.sqrt(x_2 * y_2)
     return pearson_coefficient

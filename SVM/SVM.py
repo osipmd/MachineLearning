@@ -1,19 +1,32 @@
 import numpy as np
 import scipy as sp
-from sklearn.base import BaseEstimator
-from sklearn.metrics import confusion_matrix
-from sklearn.cross_validation import train_test_split, cross_val_score, KFold
+from numpy import linalg
+import cvxopt
+import cvxopt.solvers
 
-
+import statistics
 from utils import read_data_from_file
 
 
-class SVMClassifier(BaseEstimator):
-    w = None
-    w0 = None
+def linear_kernel(x1, x2):
+    return np.dot(x1, x2)
 
-    def __init__(self, C=1.0):
+
+def polynomial_kernel(x, y, p=3):
+    return (1 + np.dot(x, y)) ** p
+
+
+def gaussian_kernel(x, y, sigma=5.0):
+    return np.exp(-linalg.norm(x - y) ** 2 / (2 * (sigma ** 2)))
+
+def core(x):
+    return x
+
+
+class SVM(object):
+    def __init__(self, C=None):
         self.C = C
+        if self.C is not None: self.C = float(self.C)
 
     def get_params(self, deep=False):
         return {"C": self.C}
@@ -22,71 +35,65 @@ class SVMClassifier(BaseEstimator):
         self.C = params["C"]
 
     def fit(self, X, y):
-        # data['R'] = (X[0]**2 + X[1]**2) ** 0.5
-        # data['Φ'] = np.arctan2(X[0], X[1])
-        # X0 = X
-        # X = data[['R', 'Φ']].values
-        # X = data[['X', 'Y']].values
-        N = len(X)
-        y_ = np.apply_along_axis(lambda t: 2 * t - 1, 0, y)
+        n_samples, n_features = X.shape
 
-        construct_H = lambda i, j: (np.dot(X[i], X[j])) * y_[i] * y_[j]
-        H = np.fromfunction(np.vectorize(construct_H), (N, N), dtype=int)
-        c = -np.ones(N)
-        x0 = np.random.randn(N)
-        cons = [{"type": "ineq", "fun": lambda x: self.C * np.ones(N) - x, "jac": lambda x: -np.eye(N)}
-            , {"type": "ineq", "fun": lambda x: x, "jac": lambda x: np.eye(N)}
-            , {"type": "eq", "fun": lambda x: np.dot(y_, x), "jac": lambda x: y_}]
-        opt = {"disp": False}
+        # Gram matrix
+        K = np.zeros((n_samples, n_samples))
+        for i in range(n_samples):
+            for j in range(n_samples):
+                x_ = X[i] * X[j]
+                K[i, j] = core(X[i]*X[j])
 
-        # solve constrained minimization problem using quadratic programming solver
-        loss = lambda x: 0.5 * np.dot(x.T, np.dot(H, x)) + np.dot(c, x)
-        jac = lambda x: 0.5 * np.dot(x.T, H) + c
-        res = sp.optimize.minimize(loss, x0, jac=jac, constraints=cons, method="SLSQP", options=opt)
-        # find w, w0
-        self.w = np.dot(res.x * y_, X)
-        for i, w_i in enumerate(res.x):
-            if (w_i > 0):
-                self.w0 = np.dot(self.w, X[i]) - y_[i]
-                break
+        P = cvxopt.matrix(np.outer(y, y) * K)
+        q = cvxopt.matrix(np.ones(n_samples) * -1)
+        A = cvxopt.matrix(y, (1, n_samples), 'd')
+        b = cvxopt.matrix(0.0)
+
+        if self.C is None:
+            G = cvxopt.matrix(np.diag(np.ones(n_samples) * -1))
+            h = cvxopt.matrix(np.zeros(n_samples))
+        else:
+            tmp1 = np.diag(np.ones(n_samples) * -1)
+            tmp2 = np.identity(n_samples)
+            G = cvxopt.matrix(np.vstack((tmp1, tmp2)))
+            tmp1 = np.zeros(n_samples)
+            tmp2 = np.ones(n_samples) * self.C
+            h = cvxopt.matrix(np.hstack((tmp1, tmp2)))
+
+        # solve QP problem
+        solution = cvxopt.solvers.qp(P, q, G, h, A, b)
+
+        # Lagrange multipliers
+        lambd = np.ravel(solution['x'])
+
+        # Support vectors have non zero lagrange multipliers
+        sv = lambd > 1e-5
+        ind = np.arange(len(lambd))[sv]
+        self.lambd = lambd[sv]
+        self.sv = X[sv]
+        self.sv_y = y[sv]
+        print("%d support vectors out of %d points" % (len(self.lambd), n_samples))
+
+        # Intercept
+        self.b = 0
+        for n in range(len(self.lambd)):
+            self.b += self.sv_y[n]
+            self.b -= np.sum(self.lambd * self.sv_y * K[ind[n], sv])
+        self.b /= len(self.lambd)
+
+        self.w = None
+
+    def project(self, X):
+        if self.w is not None:
+            return np.dot(X, self.w) + self.b
+        else:
+            y_predict = np.zeros(len(X))
+            for i in range(len(X)):
+                s = 0
+                for lambd, sv_y, sv in zip(self.lambd, self.sv_y, self.sv):
+                    s += lambd * sv_y * core(X[i], sv)
+                y_predict[i] = s
+            return y_predict + self.b
 
     def predict(self, X):
-        y_pred_ = np.sign(np.dot(X, self.w) - self.w0)
-        save(X, y_pred_)
-
-        return 0.5 * y_pred_ + 0.5
-
-def core(x):
-    return x
-    # return (abs(x) + 1) ** 2 * np.sign(x)
-
-
-x2_p = []
-x2_n = []
-x2 = []
-y2 = []
-
-
-def save(x, y):
-    for i in range(len(x)):
-        x1 = x[i]
-        y1 = y[i]
-        if y1 > 0:
-            y2.append(1)
-            x2_p.append(x1)
-        else:
-            y2.append(-1)
-            x2_n.append(x1)
-
-
-X, Y = read_data_from_file('chips.txt')
-C = 1.0
-#cv_score_2 = cross_val_score(SVMClassifier(C), X, Y, scoring="accuracy", cv=118)
-
-clf = SVMClassifier(C)
-clf.fit(X, Y)
-Y_predict = clf.predict(X)
-print(confusion_matrix(Y, Y_predict))
-recall = confusion_matrix(Y, Y_predict)[0][0] / (confusion_matrix(Y, Y_predict)[0][0] + confusion_matrix(Y, Y_predict)[0][1])
-precision = confusion_matrix(Y, Y_predict)[0][0] / (confusion_matrix(Y, Y_predict)[0][0] + confusion_matrix(Y, Y_predict)[1][0])
-print(2*recall*precision/(recall+precision))
+        return np.sign(self.project(X))

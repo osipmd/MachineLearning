@@ -39,8 +39,8 @@ def create_statistics():
         if x in pearson_sorted_keys and x in spearman_sorted_keys and x not in All:
             All.append(x)
         elif x in pearson_sorted_keys and x not in pearson_IG:
-            pearson_spearman.append(x)
-        elif x in spearman_sorted_keys:
+            pearson_IG.append(x)
+        elif x in spearman_sorted_keys and x not in spearman_IG:
             spearman_IG.append(x)
         else:
             IG.append(x)

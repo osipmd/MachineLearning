@@ -15,7 +15,7 @@ def do_analyse():
     labels_train_file = 'Practice_FS/arcene_train.labels'
     labels_test_file = 'Practice_FS/arcene_valid.labels'
 
-    features_train = read_features_from_file(features_train_file)
+    features_train = read_features_from_file(features_train_file).transpose()
     features_test = read_features_from_file(feature_test_file)
     labels_train = read_labels_from_file(labels_train_file)
     labels_test = read_labels_from_file(labels_test_file)
@@ -28,7 +28,6 @@ def do_analyse():
 
     pearson_sorted_keys = sorted(pearson_dict, key=lambda x: pearson_dict[x], reverse=True)
     #print(pearson_sorted_keys)
-
 
     spearman_coefficients = count_all_spearman_correlation_coefficient(features_train, labels_train)
     #print(sorted(np.abs(spearman_coefficients), reverse=True))
@@ -49,7 +48,8 @@ def do_analyse():
     IG_sorted_keys = sorted(IG_dict, key=lambda x: IG_dict[x], reverse=True)
     #print(IG_sorted_keys)
 
-    return pearson_sorted_keys, spearman_sorted_keys, IG_sorted_keys
 
+
+    return pearson_sorted_keys, spearman_sorted_keys, IG_sorted_keys
 
 do_analyse()

@@ -4,7 +4,7 @@ import math
 def count_all_pearson_correlation_coefficient(X, Y):
     pearson_coefficients = []
     for i in range(len(X)):
-        pearson_coefficients.append(count_pearson_correlation_coefficient(X[:, i], Y))
+        pearson_coefficients.append(count_pearson_correlation_coefficient(X[i], Y))
     return pearson_coefficients
 
 

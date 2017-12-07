@@ -4,7 +4,7 @@ import math
 def get_IG_for_all_features(X, Y):
     IG = []
     for i in range(len(X)):
-        IG.append(get_IG(X[:, i], Y))
+        IG.append(get_IG(X[i], Y))
     return IG
 
 

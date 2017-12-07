@@ -2,7 +2,7 @@ def count_all_spearman_correlation_coefficient(X, Y):
     spearman_coefficients = []
     rank_dict_labels, ligaments_labels = get_rank_ligaments(Y)
     for i in range(len(X)):
-        spearman_coefficients.append(count_spearman_correlation_coefficient_2(X[:, i], Y, rank_dict_labels, ligaments_labels))
+        spearman_coefficients.append(count_spearman_correlation_coefficient_2(X[i], Y, rank_dict_labels, ligaments_labels))
     return spearman_coefficients
 
 

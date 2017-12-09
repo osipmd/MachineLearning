@@ -5,9 +5,9 @@ from analyse import do_analyse
 
 def create_statistics():
     pearson_sorted_keys_all, spearman_sorted_keys_all, IG_sorted_keys_all = do_analyse()
-    pearson_sorted_keys = pearson_sorted_keys_all[:100]
-    spearman_sorted_keys = spearman_sorted_keys_all[:100]
-    IG_sorted_keys = IG_sorted_keys_all[:100]
+    pearson_sorted_keys = pearson_sorted_keys_all[:20]
+    spearman_sorted_keys = spearman_sorted_keys_all[:20]
+    IG_sorted_keys = IG_sorted_keys_all[:20]
 
     pearson = []
     pearson_spearman = []

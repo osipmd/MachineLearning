@@ -21,7 +21,7 @@ def count_spearman_correlation_coefficient(X, Y, rank_dict_labels, ligaments_lab
     n = len(X)
     diff_rank = 0
     for i, x in enumerate(X):
-        diff_rank = (rank_dict_features[x] - rank_dict_labels[Y[i]]) ** 2
+        diff_rank += (rank_dict_features[x] - rank_dict_labels[Y[i]]) ** 2
     spearman_coefficient = 1 - (6 / (n * (n - 1) * (n + 1))) * diff_rank
     return spearman_coefficient
 

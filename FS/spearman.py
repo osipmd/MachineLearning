@@ -6,16 +6,6 @@ def count_all_spearman_correlation_coefficient(X, Y):
     return spearman_coefficients
 
 
-def count_spearman_correlation_coefficient(X, Y, rank_dict_labels, ligaments_labels):
-    rank_dict_features = define_rank(X)
-    n = len(X)
-    diff_rank = 0
-    for i, x in enumerate(X):
-        diff_rank = (rank_dict_features[x] - rank_dict_labels[Y[i]]) ** 2
-    spearman_coefficient = 1 - (6 / (n * (n - 1) * (n + 1))) * diff_rank
-    return spearman_coefficient
-
-
 def count_spearman_correlation_coefficient_2(X, Y, rank_dict_labels, ligaments_labels):
     rank_dict_features, ligaments_features = get_rank_ligaments(X)
     n = len(X)
@@ -23,6 +13,16 @@ def count_spearman_correlation_coefficient_2(X, Y, rank_dict_labels, ligaments_l
     for i, x in enumerate(X):
         diff_rank = (rank_dict_features[x] - (n + 1) / 2) * (rank_dict_labels[Y[i]] - (n + 1) / 2)
     spearman_coefficient = diff_rank / (n * (n - 1) * (n + 1) - (ligaments_features + ligaments_labels))
+    return spearman_coefficient
+
+
+def count_spearman_correlation_coefficient(X, Y, rank_dict_labels, ligaments_labels):
+    rank_dict_features = define_rank(X)
+    n = len(X)
+    diff_rank = 0
+    for i, x in enumerate(X):
+        diff_rank = (rank_dict_features[x] - rank_dict_labels[Y[i]]) ** 2
+    spearman_coefficient = 1 - (6 / (n * (n - 1) * (n + 1))) * diff_rank
     return spearman_coefficient
 
 

@@ -5,9 +5,9 @@ from analyse import do_analyse
 
 def create_statistics():
     pearson_sorted_keys_all, spearman_sorted_keys_all, IG_sorted_keys_all = do_analyse()
-    pearson_sorted_keys = pearson_sorted_keys_all[:20]
-    spearman_sorted_keys = spearman_sorted_keys_all[:20]
-    IG_sorted_keys = IG_sorted_keys_all[:20]
+    pearson_sorted_keys = pearson_sorted_keys_all[:100]
+    spearman_sorted_keys = spearman_sorted_keys_all[:100]
+    IG_sorted_keys = IG_sorted_keys_all[:100]
 
     pearson = []
     pearson_spearman = []
@@ -46,29 +46,29 @@ def create_statistics():
             spearman_IG.append(x)
         else:
             IG.append(x)
-        #    print("All : ", All)
-        #    print('pearson_spearman : ', pearson_spearman)
-        #    print('pearson_IG : ', pearson_IG)
-        #    print('spearman_IG : ', spearman_IG)
-        #    print('pearson : ', pearson)
-        #    print('spearman : ', spearman)
-        #    print('IG : ', IG)
+    print("All : ", All)
+    print('pearson_spearman : ', pearson_spearman)
+    print('pearson_IG : ', pearson_IG)
+    print('spearman_IG : ', spearman_IG)
+    print('pearson : ', pearson)
+    print('spearman : ', spearman)
+    print('IG : ', IG)
 
-    default = sys.stdout
-    with open('results.txt', 'w') as out:
-        sys.stdout = out
-        print("psk", ":", pearson_sorted_keys_all)
-        print("ssk", ":", spearman_sorted_keys_all)
-        print("isk", ":", IG_sorted_keys_all)
-
-        print("All : ", All)
-        print('pearson_spearman : ', pearson_spearman)
-        print('pearson_IG : ', pearson_IG)
-        print('spearman_IG : ', spearman_IG)
-        print('pearson : ', pearson)
-        print('spearman : ', spearman)
-        print('IG : ', IG)
-    sys.stdout = default
+    # default = sys.stdout
+    # with open('results.txt', 'w') as out:
+    #     sys.stdout = out
+    #     print("psk", ":", pearson_sorted_keys_all)
+    #     print("ssk", ":", spearman_sorted_keys_all)
+    #     print("isk", ":", IG_sorted_keys_all)
+    #
+    #     print("All : ", All)
+    #     print('pearson_spearman : ', pearson_spearman)
+    #     print('pearson_IG : ', pearson_IG)
+    #     print('spearman_IG : ', spearman_IG)
+    #     print('pearson : ', pearson)
+    #     print('spearman : ', spearman)
+    #     print('IG : ', IG)
+    # sys.stdout = default
     return All, pearson_spearman, pearson_IG, spearman_IG, pearson, spearman, IG
 
 
